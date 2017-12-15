@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>选择元素与绑定数据</title>
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+</head>
+<body>
+	<p></p>
+	<p></p>
+	<p></p>
+	<script>
+		var body = d3.select("body");
+		var p = body.selectAll("p");
+
+		var dataset = ["I like dog","I like cat","I like snake"];
+		p.data(dataset)
+			.text((d, i) => {
+				return d;
+			})
+	</script>
+</body>
+</html>
