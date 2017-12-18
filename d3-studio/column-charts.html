@@ -49,6 +49,16 @@
 			.attr('width', xScale.rangeBand() - rectPadding)
 			.attr('height', () => 0)
 			.attr('fill', 'steelblue')
+			.on('mouseover', function(d, i) {
+				d3.select(this)
+					.attr('fill', 'yellow')
+			})
+			.on('mouseout', function(d, i) {
+				d3.select(this)
+					.transition()
+					.duration(500)
+					.attr('fill', 'steelblue')
+			})
 			.transition()
 			.delay((d, i) => i * 200)
 			.duration(2000)
