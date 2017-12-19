@@ -33,16 +33,18 @@
 			.attr('transform', 'translate(' + ( width / 2 ) + ', ' + (width / 2) + ')');
 
 		var color = d3.scale.category10();
-		
+
 		arcs.append('path')
 			.attr('fill', (d, i) => color(i))
 			.attr('d', d => arc(d));
-
 
 		arcs.append('text')
 			.attr('transform', d => 'translate(' + arc.centroid(d) + ')')
 			.attr('text-anchor', 'middle')
 			.text(d => d.data);
+
+		
+
 	</script>
 </body>
 </html>
