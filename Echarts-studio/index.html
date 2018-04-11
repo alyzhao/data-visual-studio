@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+<head>
+	<meta charset="utf-8">
+</head>
+<body style="height: 100%; margin: 0;background-color: #222;">
+<div id="container" style="height: 100%"></div>
+<script type="text/javascript" src="./lib/echarts.min.js"></script>
+<script type="text/javascript" src="./lib/echarts-gl.min.js"></script>
+<script src="./lib/jquery.min.js"></script>
+<script type="text/javascript">
+	var dom = document.getElementById("container");
+	var myChart = echarts.init(dom);
+	var option = null;
+	myChart.showLoading();
+
+	var url = 'http://datam.youlishu.com/dataset/json?oid=1233';
+	// var url = './data/data.json';
+
+	$.ajax({
+		url: url,
+		type: 'GET',
+		dataType: 'jsonp',
+		success: function(resData) {
+			myChart.hideLoading();
+			var xAxis = resData.map(function(item, index) {
+				return item.x;
+			})
+			xAxis = Array.from(new Set(xAxis));
+			var yAxis = resData.map(function(item, index) {
+				return item.y;
+			})
+			yAxis = Array.from(new Set(yAxis));
+
+			var data = resData.map(function(item, index) {
+				return [item.x, item.y, item.z];
+			})
+
+			option = {
+				tooltip: {},
+				visualMap: {
+					max: 20,
+					inRange: {
+						color: ['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']
+					}
+				},
+				xAxis3D: {
+					type: 'category',
+					name: '被攻击IP',
+					data: xAxis,
+					nameTextStyle: {
+						fontSize: 30
+					},
+					axisLabel: {
+						textStyle: {
+							fontSize: 30
+						}
+					},
+					axisLine: {
+						lineStyle: {
+							color: '#fff'
+						}
+					}
+				},
+				yAxis3D: {
+					type: 'category',
+					name: '攻击种类',
+					data: yAxis,
+					nameTextStyle: {
+						fontSize: 30
+					},
+					axisLabel: {
+						textStyle: {
+							fontSize: 30
+						}
+					},
+					axisLine: {
+						lineStyle: {
+							color: '#fff'
+						}
+					}
+				},
+				zAxis3D: {
+					type: 'value',
+					name: '攻击数量',
+					nameTextStyle: {
+						fontSize: 30
+					},
+					axisLabel: {
+						textStyle: {
+							fontSize: 30
+						}
+					},
+					axisLine: {
+						lineStyle: {
+							color: '#fff'
+						}
+					}
+				},
+				grid3D: {
+					boxWidth: 200,
+					boxDepth: 80,
+					viewControl: {
+						// projection: 'orthographic',
+						rotateSensitivity: 0,
+						distance: 260
+					},
+					splitLine: {
+						show: false
+					},
+					axisPointer: {
+						show: false
+					},
+					light: {
+						main: {
+							intensity: 1.2,
+							shadow: true
+						},
+						ambient: {
+							intensity: 0.3
+						}
+					},
+				},
+				series: [{
+					type: 'bar3D',
+					data: data.map(function(item) {
+						return {
+							value: [item[0], item[1], item[2]],
+						}
+					}),
+					shading: 'lambert',
+
+					label: {
+						textStyle: {
+							fontSize: 30,
+							borderWidth: 1
+						}
+					},
+					tooltip: {
+	                    textStyle: {
+	                        fontSize: 30
+	                    }
+	                },     
+					emphasis: {
+						label: {
+							textStyle: {
+								fontSize: 30,
+								color: '#900'
+							}
+						},
+						itemStyle: {
+							color: '#900'
+						}
+					}
+				}]
+			}
+			myChart.setOption(option);
+		}
+	})
+</script>
+</body>
+</html>

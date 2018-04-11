@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+<head>
+    <meta charset="utf-8">
+</head>
+<body style="height: 100%; margin: 0;background-color: #000;">
+<div id="container" style="height: 100%">
+                        <div class="server-chart"></div>
+                        <div class="server-chart"></div>
+                        <div class="server-chart"></div>
+                        <div class="server-chart"></div>
+                        <div class="server-chart"></div>
+    
+</div>
+<style type="text/css">
+        .server-chart {
+        width: 150px;
+        height: 150px;
+    }
+</style>
+<script type="text/javascript" src="../lib/echarts.js"></script>
+<script type="text/javascript" src="../lib/echarts-gl.js"></script>
+<script src="../lib/jquery.js"></script>
+<script type="text/javascript">
+    var dom = document.getElementById("container");
+    // var myChart = echarts.init(dom);
+    var serverCharts = [];
+
+const serverChartDom = document.querySelectorAll('.server-chart')
+for (var i = 0; i < serverChartDom.length; i++) {
+   serverCharts[i] = echarts.init(serverChartDom[i])
+}
+
+var serverData = [{
+    'name': '',
+    'value': '10'
+}, {
+    'name': '',
+    'value': '20'
+}, {
+    'name': '',
+    'value': '30'
+}, {
+    'name': '',
+    'value': '40'
+}, {
+    'name': '',
+    'value': '50'
+}]
+
+var serverDataColors = ['#89C541','#FBAE5A','#89C541','#ca3636','#F84000','#FFA442'];
+
+var serverDataOptions = {
+    tooltip: {
+        trigger: 'item',
+        formatter: function(params, ticket, callback) {
+            return params.name + ' : ' + params.percent + '%';
+        }
+    },
+    grid: {  
+        bottom: 100,
+        top:150
+        
+    },
+     xAxis: [{
+        show: false
+    }],
+    yAxis: [{
+        show: false
+    }],
+    series: []
+}
+
+
+
+var serverSeries = {
+    name:'',
+    center:  ['50%', '50%'],
+    radius: ['44%', '60%'],
+    type: 'pie',
+    labelLine: {
+        normal: {
+            show: false,
+        }
+    },
+    markPoint: {
+        data: [
+            {
+                symbol: 'triangle',
+                symbolSize: 15,
+                symbolRotate: 0,
+                itemStyle: {
+                    normal: {
+                        color: 'transparent'
+                    }
+                },
+                name: '',
+                value: '',
+                x: 0,
+                y: 0,
+                label: {
+                    normal: {
+                        show: true,
+                        position: 'center',
+                        formatter: function(params) {
+                            return params.value;
+                        },
+                        textStyle: {
+                            color:''
+                        }
+                    }
+                },
+            }
+        ]
+    },
+    markLine: {
+        silent: true,
+        symbolSize: 0,
+        data:[{       
+            0: {
+                x: '100%', 
+                y: '40%',
+                lineStyle: {
+                    normal: {
+                        color: 'transparent' ,
+                        width: 1,
+                        type: 'solid'
+                    }
+                } 
+            },
+            1: {
+                x: '100%',  
+                y: '100%',
+                lineStyle: {
+                    normal: {
+                        color: 'transparent' ,
+                        width: 1,
+                        type: 'solid'
+                    }
+                } 
+            }
+        }]
+    },
+    data: [{
+        value: '',
+        name: '',
+        itemStyle: {
+            normal: {
+                color: ''
+            },
+            emphasis: {
+                color: ''
+            }
+        },
+        label: {
+            normal: {
+                formatter: '{d} %',
+                position: 'center',
+                show: true,
+                textStyle: {
+                    fontSize: '16',
+                    fontWeight: 'bold',
+                    color: ''
+                }
+            }
+        }
+    }, {
+        value: 0,
+        name: '',
+        tooltip: {
+            show: false
+        },
+        itemStyle: {
+            normal: {
+                color: '#E4E8E9'
+            },
+            emphasis: {
+                color: '#E4E8E9'
+            }
+        },
+        hoverAnimation: false
+    }]
+}    
+
+
+for (var i = 0; i < serverData.length; i++) {
+    serverSeries.markPoint.data[0].value = serverData[i].name
+    serverSeries.markPoint.data[0].x = this.serverCharts[i].getWidth() * (i + 0.5) / 5
+    serverSeries.markPoint.data[0].y = this.serverCharts[i].getHeight() * 0.45 + 120
+    serverSeries.markPoint.data[0].label.normal.textStyle.color = serverDataColors[i]
+    serverSeries.markLine.data[0][0].lineStyle.normal.color = i < serverData.length - 1 ? '#ccc':'transparent'
+    serverSeries.markLine.data[0][1].lineStyle.normal.color = i < serverData.length - 1 ?'#ccc':'transparent'
+    serverSeries.data[0].value = serverData[i].value
+    serverSeries.data[0].name = serverData[i].name
+    serverSeries.data[0].itemStyle.normal.color = serverDataColors[i]
+    serverSeries.data[0].itemStyle.emphasis.color = serverDataColors[i]
+    serverSeries.data[0].label.normal.textStyle.color = serverDataColors[i]
+    serverSeries.data[1].value = 100 - serverData[i].value;
+    serverDataOptions.series = serverSeries;
+    serverCharts[i].setOption(serverDataOptions, true)
+}
+
+
+</script>
+</body>
+</html>
